@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Portal</title>
+    <link rel="icon" href="/images/msa.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hugeicons/core-free-font@latest/css/core.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* ========== GLOBAL ========== */
+        * {
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            background:
+                linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                url("/images/msa_background.webp") center/cover no-repeat fixed;
+<!--            flex: 1;-->
+        }
+
+        /* ========== HEADER ========== */
+        .main-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 72px;
+
+            background:
+                linear-gradient(
+                    to right,
+                    rgba(0,0,0,0.55),
+                    rgba(0,0,0,0.25),
+                    rgba(0,0,0,0.55)
+                );
+
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 1000;
+
+            animation: headerSlide 1s ease forwards;
+        }
+
+        /* Header animation */
+        @keyframes headerSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-80px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== LEFT ========== */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+
+            border: 2px solid rgba(255,255,255,0.85);
+            box-shadow:
+                0 0 10px rgba(255,255,255,0.6),
+                0 0 20px rgba(0,198,255,0.4);
+
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+
+        .logo:hover {
+            transform: scale(1.08);
+            box-shadow:
+                0 0 15px rgba(255,255,255,0.9),
+                0 0 30px rgba(0,198,255,0.7);
+        }
+
+        .title {
+            color: #fff;
+            font-size: 21px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== NAV LINKS ========== */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+
+        .nav-links a {
+            position: relative;
+            text-decoration: none;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 6px 0;
+            transition: color 0.3s;
+            display: flex; /* Added for vertical alignment of content */
+            align-items: center; /* Added for vertical alignment of content */
+            height: 100%; /* Ensure consistent height */
+        }
+
+        /* underline animation */
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            transition: width 0.4s ease;
+        }
+
+        .nav-links a:hover {
+            color: #00c6ff;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* subtle hover glow */
+        .nav-links a:hover {
+            text-shadow: 0 0 10px rgba(0,198,255,0.6);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 18px;
+            }
+
+            .title {
+                font-size: 18px;
+            }
+        }
+
+        /* ===== LOGOUT DROPDOWN ===== */
+        .dropdown {
+            position: relative;
+            align-self: center; /* Ensure dropdown aligns with other flex items */
+        }
+
+        .dropdown > a {
+            cursor: pointer;
+        }
+
+        /* submenu */
+        .dropdown-menu {
+            position: absolute;
+            top: 38px;
+            right: 0;
+            min-width: 140px;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: 0.4s;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 16px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(0,198,255,0.35);
+        }
+
+       /* ==============================
+          CENTER CONTENT
+       ============================== */
+       .center-content-wrapper {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           flex: 1;
+           padding: 40px; /* Reduced padding for better layout */
+       }
+       .dashboard-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+           gap: 30px;
+           width: 100%;
+           max-width: 1200px;
+       }
+       
+       /* Card entrance animation */
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+       
+       .dashboard-card {
+           background: rgba(255, 255, 255, 0.15);
+           border-radius: 15px;
+           padding: 25px;
+           text-align: center;
+           color: white;
+           backdrop-filter: blur(12px);
+           box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+           text-decoration: none;
+           transition: transform 0.4s, box-shadow 0.4s;
+           animation: cardFadeIn 0.5s ease forwards;
+           opacity: 0; /* Start hidden for animation */
+       }
+       
+       /* Staggered animation delays */
+       .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+       .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+       .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+       .dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+       .dashboard-card:nth-child(5) { animation-delay: 0.5s; }
+       .dashboard-card:nth-child(6) { animation-delay: 0.6s; }
+       
+       .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+       }
+       .card-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #00c6ff;
+            text-shadow: 0 0 15px rgba(0,198,255,0.7);
+            transition: transform 0.3s, text-shadow 0.3s;
+       }
+       
+       .dashboard-card:hover .card-icon {
+           transform: scale(1.1);
+           text-shadow: 0 0 25px rgba(0,198,255,1);
+       }
+       
+       .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+       }
+       .card-description {
+            font-size: 14px;
+            color: #eee;
+       }
+        /* HR Banner Styles */
+        .hr-banner {
+            position: relative;
+            width: 100%;
+            height: 250px; /* Adjust height as needed */
+            margin-top: 72px; /* Height of the fixed header */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7));
+        }
+
+        .hr-banner-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4; /* Slightly dim the image */
+            z-index: -1;
+        }
+
+        .hr-banner-content {
+            z-index: 1;
+            padding: 20px;
+        }
+
+        .hr-banner-content h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
+
+        .hr-banner-content p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+        }
+
+       /* ========== FOOTER ========== */
+        .main-footer {
+            background: #1f1f1f;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+        }
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #00c6ff;
+        }
+        .footer-column a {
+            color: #ccc;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-column a:hover {
+            color: #fff;
+        }
+        .footer-social {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .social-icon {
+            color: #fff;
+            font-size: 24px;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+        .social-icon:hover {
+            color: #00c6ff;
+        }
+        .footer-copyright {
+            text-align: center;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header class="main-header">
+    <div class="header-left">
+        <img src="/images/msa.jpg" class="logo" alt="Logo">
+        <span class="title">MSA Software Company HR Portal</span>
+    </div>
+
+    <nav class="nav-links">
+        <a th:href="@{/hr_portal}">Home</a>
+
+        <a href="#">Reports</a>
+
+        <!-- LOGOUT DROPDOWN -->
+        <div class="dropdown">
+            <a>Logout</a>
+            <div class="dropdown-menu">
+                <!-- OPTION 1: Redirect out -->
+                <a th:href="@{/admin_login}">Exit</a>
+
+                <!-- OPTION 2: Try to close tab (uncomment if needed)
+                <a href="#" onclick="window.close()">Exit</a>
+                -->
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- HR Banner Section -->
+<div class="hr-banner">
+    <img src="/images/employeeb.webp" alt="HR Professional" class="hr-banner-image">
+    <div class="hr-banner-content">
+        <h1>Welcome to Your HR Portal</h1>
+        <p>Your central hub for managing employees, attendance, leave, and more.</p>
+    </div>
+</div>
+
+<div class="center-content-wrapper">
+    <div class="dashboard-grid">
+        <!-- Card 1: View Employees -->
+        <a th:href="@{/employee records}" class="dashboard-card">
+            <div class="card-icon"><i class="fas fa-users"></i></div>
+            <div class="card-title">View Employees</div>
+            <div class="card-description">Browse and manage the list of all employees in the system.</div>
+        </a>
+
+        <!-- Card 2: Add Employee -->
+        <a th:href="@{/addEmployee}" class="dashboard-card">
+            <div class="card-icon"><i class="fas fa-user-plus"></i></div>
+            <div class="card-title">Add New Employee</div>
+            <div class="card-description">Onboard a new member to the team with a simple form.</div>
+        </a>
+
+        <!-- Card 3: Reports -->
+        <a href="#" class="dashboard-card">
+            <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="card-title">Generate Reports</div>
+            <div class="card-description">Create and view reports on payroll, attendance, and more.</div>
+        </a>
+
+        <!-- Card 4: Attendance -->
+        <a th:href="@{/attendance}" class="dashboard-card">
+            <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="card-title">Attendance</div>
+            <div class="card-description">Track and manage employee attendance records.</div>
+        </a>
+
+        <!-- Card 5: Leave Management -->
+        <a th:href="@{/leave}" class="dashboard-card">
+            <div class="card-icon"><i class="fas fa-plane-departure"></i></div>
+            <div class="card-title">Leave Management</div>
+            <div class="card-description">Approve or deny employee leave requests.</div>
+        </a>
+
+        <!-- Card 6: Admin Settings -->
+        <a th:href="@{/admin_page}" class="dashboard-card">
+            <div class="card-icon"><i class="fas fa-cog"></i></div>
+            <div class="card-title">Admin Settings</div>
+            <div class="card-description">Configure system settings and manage admin privileges.</div>
+        </a>
+    </div>
+</div>
+<footer class="main-footer">
+    <div class="footer-links">
+        <div class="footer-column">
+            <h3>Top Links</h3>
+            <a th:href="@{/employee records}">Employees</a>
+            <a href="#">Reports</a>
+            <a th:href="@{/attendance}">Attendance</a>
+            <a th:href="@{/leave}">Leave</a>
+        </div>
+        <div class="footer-column">
+            <h3>About Us</h3>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+            <a href="#">Confidential</a>
+        </div>
+        <div class="footer-column">
+            <h3>Legal</h3>
+            <a href="#">Terms of Use</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+    <div class="footer-social">
+        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+    </div>
+    <div class="footer-copyright">
+        <p>&copy; 2025 Your Company Name. All Rights Reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

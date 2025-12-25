@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HR Login</title>
+    <link rel="icon" href="/images/msa.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* ========== GLOBAL ========== */
+        * {
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background:
+                linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.6)),
+                url("/images/msa_background.webp") center bottom/cover no-repeat fixed;
+        }
+
+        /* ========== HEADER ========== */
+        .main-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 74px;
+
+            /* background that blends with image */
+            background:
+                linear-gradient(
+                    to right,
+                    rgba(0,0,0,0.55),
+                    rgba(0,0,0,0.25),
+                    rgba(0,0,0,0.55)
+                );
+
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            color: #fff;
+            z-index: 1000;
+
+            animation: headerDrop 1s ease forwards;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        /* ===== LOGO / PROFILE IMAGE ===== */
+        .logo {
+            width: 44px;
+            height: 44px;
+            object-fit: cover;
+
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.8);
+
+            box-shadow:
+                0 0 10px rgba(255,255,255,0.6),
+                0 0 20px rgba(0,198,255,0.4);
+
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+
+        .logo:hover {
+            transform: scale(1.08);
+            box-shadow:
+                0 0 15px rgba(255,255,255,0.9),
+                0 0 30px rgba(0,198,255,0.7);
+        }
+
+        .title {
+            font-size: 21px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+        }
+
+        /* Header animation */
+        @keyframes headerDrop {
+            from { opacity: 0; transform: translateY(-80px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== CENTER AREA ========== */
+        .center-wrapper {
+            /* Removed height: 100%; as min-height takes over */
+            min-height: calc(100% - 74px); /* Takes full height below fixed header */
+            display: flex;
+            align-items: center; /* Vertically centers content within the wrapper */
+            justify-content: center;
+            /* Removed padding-top here, controlled by margin-top on login-card */
+            width: 100%; /* Ensure it spans full width */
+        }
+
+        /* ========== LOGIN CARD ========== */
+        .login-card {
+            width: 350px;
+            padding: 15px 25px;
+            border-radius: 22px;
+            margin-top: 15vh; /* Pushes the card down from the top of the wrapper */
+
+            background: rgba(255,255,255,0.14);
+            backdrop-filter: blur(18px);
+
+            color: #fff;
+            box-shadow: 0 35px 80px rgba(0,0,0,0.6);
+
+            animation: cardReveal 1.2s ease forwards;
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+
+        .login-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 45px 100px rgba(0,0,0,0.75);
+        }
+
+        .login-profile-img {
+            width: 70px; /* Further reduced size */
+            height: 70px; /* Further reduced size */
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 5px; /* Further reduced margin */
+            border: 3px solid rgba(255,255,255,0.7);
+            box-shadow: 0 0 15px rgba(0,198,255,0.5);
+        }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(60px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-card h2 {
+            text-align: center;
+            font-size: 26px; /* Slightly reduced font size */
+            margin-bottom: 4px;
+        }
+
+        .login-card p {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px; /* Further reduced margin */
+        }
+
+        /* ========== FORM ========== */
+        .form-group {
+            position: relative; /* For icon positioning */
+            margin-bottom: 10px; /* Further reduced margin */
+        }
+
+        .form-group label {
+            font-size: 12px;
+            margin-bottom: 4px;
+            display: block;
+        }
+        
+        .form-group .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #eee;
+            opacity: 0.8;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px 10px 8px 35px; /* Reduced padding */
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            background: rgba(255,255,255,0.25);
+            color: #fff;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .form-group input::placeholder {
+            color: #eee;
+        }
+
+        .form-group input:focus {
+            background: rgba(255,255,255,0.45);
+            box-shadow: 0 0 0 2px rgba(0,198,255,0.6);
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            margin-bottom: 10px; /* Further reduced margin */
+        }
+        
+        .form-options .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .form-options a {
+            color: #00c6ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .form-options a:hover {
+            color: #fff;
+        }
+
+        /* ========== BUTTON ========== */
+        .login-btn {
+            width: 100%;
+            padding: 10px; /* Reduced padding */
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 35px rgba(0,114,255,0.7);
+        }
+        
+        /* Social Logins */
+        .social-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 10px 0; /* Further reduced margin */
+            color: #ccc;
+            font-size: 12px;
+        }
+        
+        .social-divider::before, .social-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .social-divider:not(:empty)::before {
+            margin-right: .5em;
+        }
+        
+        .social-divider:not(:empty)::after {
+            margin-left: .5em;
+        }
+        
+        .social-logins {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px; /* Reduced size */
+            height: 35px; /* Reduced size */
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.4);
+            background: transparent;
+            color: #fff;
+            font-size: 16px; /* Reduced size */
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        
+        .social-btn:hover {
+            background: rgba(0,198,255,0.2);
+            border-color: #00c6ff;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 10px; /* Reduced margin */
+            font-size: 12px;
+        }
+        
+        .register-link a {
+            color: #00c6ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .register-link a:hover {
+            color: #fff;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 480px) {
+            .login-card {
+                width: 92%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="main-header">
+    <div class="header-left">
+        <img src="/images/msa.jpg" class="logo" alt="HR Logo">
+        <span class="title">MSA Software Company HR Portal</span>
+    </div>
+</header>
+
+<div class="center-wrapper">
+    <div class="login-card">
+        <img src="/images/msa.jpg" alt="User" class="login-profile-img">
+        <h2>HR Login</h2>
+        <p>Secure access to employee management</p>
+
+        <form th:action="@{/admin_login_page}" method="post" autocomplete="off">
+            <div class="form-group">
+                <label>User Name</label>
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" name="username" placeholder="Enter username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <i class="fas fa-lock input-icon"></i>
+                <input type="password" name="password" placeholder="Enter password" required>
+            </div>
+            
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember-me">
+                    Remember Me
+                </label>
+                <a href="#">Forgot Password?</a>
+            </div>
+
+            <button class="login-btn">Login</button>
+            
+            <div class="social-divider">or</div>
+            
+            <div class="social-logins">
+                <button type="button" class="social-btn"><i class="fab fa-google"></i></button>
+                <button type="button" class="social-btn"><i class="fab fa-microsoft"></i></button>
+                <button type="button" class="social-btn"><i class="fab fa-facebook-f"></i></button>
+            </div>
+        </form>
+        <div class="register-link">
+            <p>New to our system? <a href="#">Add New HR</a></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

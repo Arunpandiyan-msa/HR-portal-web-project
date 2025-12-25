@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Profile</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 15px;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #eef2f7, #d9e4f5);
+        }
+
+        /* =====================
+           PROFILE CARD
+        ===================== */
+        .profile-container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            padding: 35px 30px;
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeUp 0.8s ease;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =====================
+           PROFILE IMAGE
+        ===================== */
+        .profile-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            cursor: pointer;
+            border: 5px solid #e6ecf5;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            margin: 15px 0 25px;
+            font-size: 26px;
+            color: #2c3e50;
+        }
+
+        /* =====================
+           PROFILE DETAILS
+        ===================== */
+        .profile-details {
+            text-align: left;
+            background: #f7f9fc;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .profile-details p {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #dce3ee;
+            font-size: 15px;
+            color: #34495e;
+        }
+
+        .profile-details p:last-child {
+            border-bottom: none;
+        }
+
+        .profile-details strong {
+            color: #2c3e50;
+        }
+
+        /* =====================
+           NOT FOUND MESSAGE
+        ===================== */
+        .not-found {
+            text-align: center;
+            margin-top: 100px;
+            font-size: 24px;
+            color: #e74c3c;
+        }
+
+        /* =====================
+           RESPONSIVE
+        ===================== */
+        @media (max-width: 600px) {
+            .profile-container {
+                padding: 25px 20px;
+            }
+
+            .profile-details p {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="profile-container" th:if="${employee}">
+    <a th:href="@{'/employee records'}">
+        <img th:src="@{'/images/' + ${employee.profileImage != null ? employee.profileImage : 'user logo.png'}}"
+             alt="User Profile"
+             class="profile-img"/>
+    </a>
+
+    <h1>User Profile</h1>
+
+    <div class="profile-details">
+        <p><strong>Name</strong> <span th:text="${employee.empname}"></span></p>
+        <p><strong>Email</strong> <span th:text="${employee.empemail}"></span></p>
+        <p><strong>Address</strong> <span th:text="${employee.empaddress}"></span></p>
+        <p><strong>Salary</strong> <span th:text="${employee.empsalary}"></span></p>
+    </div>
+</div>
+
+<div th:unless="${employee}" class="not-found">
+    Employee not found
+</div>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>admin login</title>
+    <style>
+        /* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+/* Body Styling */
+body {
+    background: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Form Container */
+form {
+    background: #ffffff;
+    padding: 40px 35px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.1);
+}
+
+/* Input Groups */
+div {
+    margin-bottom: 18px;
+}
+
+/* Labels */
+label {
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #d1d1d1;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+input:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 4px rgba(74, 144, 226, 0.4);
+}
+
+/* Submit Button */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    background-color: #4a90e2;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+button:hover {
+    background-color: #357ABD;
+}
+
+/* Add subtle animation */
+form {
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+    </style>
+</head>
+<body>
+<form th:action="@{/admin_login_page}"   method="post" autocomplete="off">
+
+    <div>
+        <label for="username">User name : </label>
+        <input type="text" id="username" name="username"  placeholder="Enter your user name" required>
+    </div>
+
+    <div>
+        <label for="password">Password : </label>
+        <input type="password" id="password" name="password"  placeholder="Enter your password" required>
+    </div>
+
+    <button type="submit">Login</button>
+
+</form>
+
+</body>
+</html>
